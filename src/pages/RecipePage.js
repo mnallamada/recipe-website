@@ -6,12 +6,28 @@ import { Container, Button, Alert, Row, Col } from 'react-bootstrap';
 import AppNavbar from '../components/Navbar';
 import { onAuthStateChanged } from 'firebase/auth';
 
-
+// Helper function to handle YouTube URLs
+const getYouTubeEmbedURL = (url) => {
+    try {
+        const videoId = new URL(url).searchParams.get('v');
+        if (!videoId) throw new Error('Invalid YouTube URL');
+        return `https://www.youtube.com/embed/${videoId}`;
+    } catch (error) {
+        console.error('Invalid YouTube URL:', error.message);
+        return ''; // Return an empty string or a fallback URL
+    }
+};
 
 const RecipePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [recipe, setRecipe] = useState(null);
+    const [recipe, setRecipe] = useState({
+        title: '',
+        description: '',
+        ingredients: [],
+        steps: [],
+        videoUrl: '',
+    });
     const [error, setError] = useState('');
     const [isAdmin, setIsAdmin] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
@@ -37,7 +53,15 @@ const RecipePage = () => {
                 const docRef = doc(db, 'recipes', id);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
-                    setRecipe(docSnap.data());
+                    const data = docSnap.data();
+                    console.log("Recipe data:", data); // Debugging
+                    setRecipe({
+                        title: data.title || '',
+                        description: data.description || '',
+                        ingredients: data.ingredients || [],
+                        steps: data.steps || [],
+                        videoUrl: data.videoUrl || '',
+                    });
                 } else {
                     setError('Recipe not found');
                 }
@@ -53,16 +77,16 @@ const RecipePage = () => {
     const handleFavorite = async () => {
         const user = auth.currentUser;
         if (!user) return alert('Please log in to favorite recipes.');
-    
+
         const favRef = doc(db, 'favorites', user.uid);
         const favDoc = await getDoc(favRef);
-    
+
         if (!favDoc.exists()) {
             await setDoc(favRef, { recipeIds: [id] });
         } else {
             await updateDoc(favRef, { recipeIds: arrayUnion(id) });
         }
-    
+
         setIsFavorite(true);
     };
 
@@ -97,15 +121,19 @@ const RecipePage = () => {
             <Container className="mt-5">
                 <Row>
                     <Col>
-                        <iframe
-                            width="100%"
-                            height="400"
-                            src={`https://www.youtube.com/embed/${new URL(recipe.videoUrl).searchParams.get('v')}`}
-                            title={recipe.title}
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        ></iframe>
+                        {getYouTubeEmbedURL(recipe.videoUrl) ? (
+                            <iframe
+                                width="100%"
+                                height="400"
+                                src={getYouTubeEmbedURL(recipe.videoUrl)}
+                                title={recipe.title}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            ></iframe>
+                        ) : (
+                            <p>Video unavailable</p>
+                        )}
                     </Col>
                 </Row>
                 <Row className="mt-4">
@@ -117,21 +145,29 @@ const RecipePage = () => {
                 <Row className="mt-4">
                     <Col>
                         <h3>Ingredients</h3>
-                        <ul>
-                            {recipe.ingredients.map((ingredient, index) => (
-                                <li key={index}>{ingredient}</li>
-                            ))}
-                        </ul>
+                        {recipe.ingredients && Array.isArray(recipe.ingredients) ? (
+                            <ul>
+                                {recipe.ingredients.map((ingredient, index) => (
+                                    <li key={index}>{ingredient}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No ingredients available</p>
+                        )}
                     </Col>
                 </Row>
                 <Row className="mt-4">
                     <Col>
                         <h3>Steps</h3>
-                        <ul>
-                            {recipe.steps.map((step, index) => (
-                                <li key={index}>{step}</li>
-                            ))}
-                        </ul>
+                        {recipe.steps && Array.isArray(recipe.steps) ? (
+                            <ul>
+                                {recipe.steps.map((step, index) => (
+                                    <li key={index}>{step}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No steps available</p>
+                        )}
                     </Col>
                 </Row>
                 <Row className="mt-4">
