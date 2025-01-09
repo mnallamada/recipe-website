@@ -1,70 +1,138 @@
-# Getting Started with Create React App
+# Recipe Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack web application that allows users to view, search, and manage recipes. Users can mark recipes as favorites, and authenticated admins can add, edit, or delete recipes.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Public Features**:
+  - Browse all recipes.
+  - Search recipes by keywords.
+  
+- **Authenticated Features**:
+  - Mark recipes as favorites (visible only to logged-in users).
+  
+- **Admin Features**:
+  - Add, edit, and delete recipes.
+  
+- **Authentication**:
+  - User registration and login using Firebase Authentication.
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Frontend
+- **React**: User interface and components.
+- **React-Bootstrap**: Responsive design and styling.
+- **Firebase Authentication**: User authentication.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Backend
+- **Firebase Firestore**: Real-time NoSQL database for storing recipes and user data.
+- **Firebase Hosting**: Hosting the web app.
+- **Firebase Functions**: Secure backend logic for handling sensitive operations.
 
-### `npm test`
+### Additional Tools
+- **Git**: Version control.
+- **GitHub**: Code hosting and collaboration.
+- **Firebase CLI**: Deployment and configuration.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Project Structure
 
-### `npm run build`
+```
+project/
+|-- public/                # Static assets
+|-- src/
+|   |-- assets/            # Images and logos
+|   |-- components/        # Reusable components (Navbar, RecipeCard, etc.)
+|   |-- pages/             # Page components (HomePage, RecipePage, etc.)
+|   |-- firebase/          # Firebase configuration
+|   |-- App.js             # Main app entry point
+|   |-- index.js           # React DOM rendering
+|-- functions/             # Firebase cloud functions
+|-- .env                   # Environment variables (ignored by Git)
+|-- firebase.json          # Firebase configuration
+|-- package.json           # Dependencies and scripts
+|-- README.md              # Project documentation
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Setup Instructions
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Prerequisites
+1. Install [Node.js](https://nodejs.org/) (LTS recommended).
+2. Install the Firebase CLI:
+   ```bash
+   npm install -g firebase-tools
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Local Setup
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/<your-username>/recipe-website.git
+   cd recipe-website
+   ```
 
-### `npm run eject`
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+3. Set up Firebase:
+   - Go to the [Firebase Console](https://console.firebase.google.com/) and create a new project.
+   - Add a web app and copy the Firebase configuration.
+   - Create a `.env` file in the root directory and add your Firebase configuration:
+     ```env
+     REACT_APP_FIREBASE_API_KEY=your-api-key
+     REACT_APP_FIREBASE_AUTH_DOMAIN=your-auth-domain
+     REACT_APP_FIREBASE_PROJECT_ID=your-project-id
+     REACT_APP_FIREBASE_STORAGE_BUCKET=your-storage-bucket
+     REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+     REACT_APP_FIREBASE_APP_ID=your-app-id
+     ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+4. Run the app locally:
+   ```bash
+   npm start
+   ```
 
 ### Deployment
+1. Build the production-ready app:
+   ```bash
+   npm run build
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+2. Deploy to Firebase Hosting:
+   ```bash
+   firebase deploy
+   ```
 
-### `npm run build` fails to minify
+## Security
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Environment Variables**:
+  Sensitive data such as Firebase API keys are stored in `.env` files and excluded from Git using `.gitignore`.
+- **Firestore Rules**:
+  Custom rules ensure:
+  - Recipes are readable by all users but writable only by admins.
+  - Favorites are accessible only to authenticated users.
+
+## Usage
+
+1. Navigate to the [deployed app](https://your-app-url.web.app/).
+2. Browse recipes or search for specific ones.
+3. Sign in to mark recipes as favorites.
+4. Admin users can manage recipes.
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+1. Fork the repository.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature-name
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m "Add new feature"
+   ```
+4. Push to your branch:
+   ```bash
+   git push origin feature-name
+   ```
+5. Submit a pull request.
