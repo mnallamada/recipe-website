@@ -1,0 +1,274 @@
+[
+    {
+        "title": "Masala Dosa",
+        "description": "A crispy rice and lentil crepe stuffed with spicy potato filling.",
+        "ingredients": [
+            "Rice",
+            "Urad Dal",
+            "Fenugreek Seeds",
+            "Potatoes",
+            "Green Chilies",
+            "Curry Leaves",
+            "Turmeric",
+            "Mustard Seeds",
+            "Oil",
+            "Salt"
+        ],
+        "method": [
+            "Soak rice, urad dal, and fenugreek seeds overnight.",
+            "Grind to a smooth batter and ferment for 8 hours.",
+            "Prepare a potato filling with spices and mash.",
+            "Spread batter on a hot griddle, add potato filling, and fold."
+        ],
+        "video": "https://www.youtube.com/embed/x1video1"
+    },
+    {
+        "title": "Idli",
+        "description": "Soft and fluffy steamed rice and lentil cakes.",
+        "ingredients": [
+            "Rice",
+            "Urad Dal",
+            "Fenugreek Seeds",
+            "Salt",
+            "Water"
+        ],
+        "method": [
+            "Soak rice and urad dal separately overnight.",
+            "Grind them into a batter and ferment for 8 hours.",
+            "Pour batter into idli molds and steam for 10-12 minutes."
+        ],
+        "video": "https://www.youtube.com/embed/x2video2"
+    },
+    {
+        "title": "Sambar",
+        "description": "A tangy lentil-based vegetable stew flavored with tamarind and spices.",
+        "ingredients": [
+            "Toor Dal",
+            "Tamarind",
+            "Mixed Vegetables",
+            "Sambar Powder",
+            "Mustard Seeds",
+            "Curry Leaves",
+            "Oil",
+            "Salt"
+        ],
+        "method": [
+            "Cook toor dal until soft.",
+            "Prepare tamarind water and cook vegetables in it.",
+            "Add cooked dal, sambar powder, and simmer.",
+            "Temper with mustard seeds, curry leaves, and serve."
+        ],
+        "video": "https://www.youtube.com/embed/x3video3"
+    },
+    {
+        "title": "Medu Vada",
+        "description": "Crispy fried savory lentil doughnuts.",
+        "ingredients": [
+            "Urad Dal",
+            "Green Chilies",
+            "Curry Leaves",
+            "Peppercorns",
+            "Salt",
+            "Oil"
+        ],
+        "method": [
+            "Soak urad dal overnight and grind into a smooth batter.",
+            "Add spices and shape the batter into doughnuts.",
+            "Deep fry until golden brown."
+        ],
+        "video": "https://www.youtube.com/embed/x4video4"
+    },
+    {
+        "title": "Rasam",
+        "description": "A tangy and spicy soup made with tamarind and tomatoes.",
+        "ingredients": [
+            "Tamarind",
+            "Tomatoes",
+            "Rasam Powder",
+            "Curry Leaves",
+            "Mustard Seeds",
+            "Pepper",
+            "Cumin",
+            "Garlic",
+            "Oil",
+            "Salt"
+        ],
+        "method": [
+            "Prepare tamarind water and add chopped tomatoes.",
+            "Add rasam powder and simmer for 10 minutes.",
+            "Temper with mustard seeds, curry leaves, and spices."
+        ],
+        "video": "https://www.youtube.com/embed/x5video5"
+    },
+    {
+        "title": "Pongal",
+        "description": "A comforting dish of rice and lentils flavored with ghee and pepper.",
+        "ingredients": [
+            "Rice",
+            "Moong Dal",
+            "Peppercorns",
+            "Cumin",
+            "Cashews",
+            "Ghee",
+            "Curry Leaves",
+            "Salt"
+        ],
+        "method": [
+            "Cook rice and moong dal together until soft.",
+            "Temper with ghee, peppercorns, cumin, and curry leaves.",
+            "Mix and garnish with roasted cashews."
+        ],
+        "video": "https://www.youtube.com/embed/x6video6"
+    },
+    {
+        "title": "Upma",
+        "description": "A savory breakfast dish made with semolina and vegetables.",
+        "ingredients": [
+            "Semolina",
+            "Onion",
+            "Green Chilies",
+            "Curry Leaves",
+            "Mustard Seeds",
+            "Vegetables",
+            "Salt",
+            "Water"
+        ],
+        "method": [
+            "Roast semolina until aromatic.",
+            "Cook vegetables and temper with spices.",
+            "Add water, mix in semolina, and cook until fluffy."
+        ],
+        "video": "https://www.youtube.com/embed/x7video7"
+    },
+    {
+        "title": "Bisi Bele Bath",
+        "description": "A hearty dish made with rice, lentils, and a unique spice blend.",
+        "ingredients": [
+            "Rice",
+            "Toor Dal",
+            "Tamarind",
+            "Bisi Bele Bath Powder",
+            "Vegetables",
+            "Curry Leaves",
+            "Ghee",
+            "Cashews",
+            "Salt"
+        ],
+        "method": [
+            "Cook rice and dal separately.",
+            "Prepare tamarind water and cook vegetables in it.",
+            "Add cooked rice, dal, and spice blend. Mix well.",
+            "Garnish with ghee-roasted cashews and serve."
+        ],
+        "video": "https://www.youtube.com/embed/x8video8"
+    },
+    {
+        "title": "Coconut Chutney",
+        "description": "A classic accompaniment made with coconut, chilies, and spices.",
+        "ingredients": [
+            "Coconut",
+            "Green Chilies",
+            "Ginger",
+            "Curry Leaves",
+            "Tamarind",
+            "Salt",
+            "Mustard Seeds",
+            "Oil"
+        ],
+        "method": [
+            "Grind coconut, chilies, ginger, and tamarind into a smooth paste.",
+            "Temper with mustard seeds and curry leaves. Mix well."
+        ],
+        "video": "https://www.youtube.com/embed/x9video9"
+    },
+    {
+        "title": "South Indian Dish 10",
+        "description": "Description of South Indian Dish 10.",
+        "ingredients": [
+            "Ingredient 1",
+            "Ingredient 2",
+            "Ingredient 3"
+        ],
+        "method": [
+            "Step 1",
+            "Step 2",
+            "Step 3"
+        ],
+        "video": "https://www.youtube.com/embed/x10video10"
+    },
+    {
+        "title": "South Indian Dish 11",
+        "description": "Description of South Indian Dish 11.",
+        "ingredients": [
+            "Ingredient 1",
+            "Ingredient 2",
+            "Ingredient 3"
+        ],
+        "method": [
+            "Step 1",
+            "Step 2",
+            "Step 3"
+        ],
+        "video": "https://www.youtube.com/embed/x11video11"
+    },
+    {
+        "title": "South Indian Dish 12",
+        "description": "Description of South Indian Dish 12.",
+        "ingredients": [
+            "Ingredient 1",
+            "Ingredient 2",
+            "Ingredient 3"
+        ],
+        "method": [
+            "Step 1",
+            "Step 2",
+            "Step 3"
+        ],
+        "video": "https://www.youtube.com/embed/x12video12"
+    },
+    {
+        "title": "South Indian Dish 13",
+        "description": "Description of South Indian Dish 13.",
+        "ingredients": [
+            "Ingredient 1",
+            "Ingredient 2",
+            "Ingredient 3"
+        ],
+        "method": [
+            "Step 1",
+            "Step 2",
+            "Step 3"
+        ],
+        "video": "https://www.youtube.com/embed/x13video13"
+    },
+    {
+        "title": "South Indian Dish 14",
+        "description": "Description of South Indian Dish 14.",
+        "ingredients": [
+            "Ingredient 1",
+            "Ingredient 2",
+            "Ingredient 3"
+        ],
+        "method": [
+            "Step 1",
+            "Step 2",
+            "Step 3"
+        ],
+        "video": "https://www.youtube.com/embed/x14video14"
+    },
+    {
+        "title": "South Indian Dish 15",
+        "description": "Description of South Indian Dish 15.",
+        "ingredients": [
+            "Ingredient 1",
+            "Ingredient 2",
+            "Ingredient 3"
+        ],
+        "method": [
+            "Step 1",
+            "Step 2",
+            "Step 3"
+        ],
+        "video": "https://www.youtube.com/embed/x15video15"
+    }
+]

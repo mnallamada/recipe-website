@@ -105,3 +105,21 @@ form button {
 form button:hover {
     background-color: #e65c50;
 }
+
+img.rounded-circle {
+    border: 1px solid #ddd;
+    padding: 2px;
+    background: #f9f9f9;
+}
+
+.comment-content {
+    margin-top: -10px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.comment-timestamp {
+    font-size: 0.8rem;
+    color: #888;
+}
+

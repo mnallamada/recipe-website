@@ -6,9 +6,11 @@ import AddRecipePage from './pages/AddRecipePage';
 import EditRecipePage from './pages/EditRecipePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import Footer from './components/Footer';
 
 const App = () => {
     return (
+        <>
         <Router>
             <Routes>
                 <Route path="/" element={<HomePage />} />
@@ -19,6 +21,8 @@ const App = () => {
                 <Route path="/register" element={<RegisterPage />} />
             </Routes>
         </Router>
+        <Footer />
+        </>
     );
 };
 

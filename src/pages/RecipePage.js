@@ -1,10 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db, auth } from '../firebase/config';
-import { doc, getDoc, setDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
-import { Container, Button, Alert, Row, Col } from 'react-bootstrap';
+import {
+    doc,
+    getDoc,
+    setDoc,
+    deleteDoc,
+    updateDoc,
+    arrayUnion,
+    arrayRemove,
+    collection,
+    query,
+    orderBy,
+    onSnapshot,
+    addDoc,
+    getDocs
+} from 'firebase/firestore';
+import { Container, Button, Alert, Row, Col, Form } from 'react-bootstrap';
 import AppNavbar from '../components/Navbar';
 import { onAuthStateChanged } from 'firebase/auth';
+import ReactStars from 'react-rating-stars-component';
 
 // Helper function to handle YouTube URLs
 const getYouTubeEmbedURL = (url) => {
@@ -28,9 +43,13 @@ const RecipePage = () => {
         steps: [],
         videoUrl: '',
     });
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState('');
     const [error, setError] = useState('');
     const [isAdmin, setIsAdmin] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
+    const [averageRating, setAverageRating] = useState(0);
+    const [totalRatings, setTotalRatings] = useState(0);
 
     useEffect(() => {
         const fetchUser = () => {
@@ -54,7 +73,6 @@ const RecipePage = () => {
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    console.log("Recipe data:", data); // Debugging
                     setRecipe({
                         title: data.title || '',
                         description: data.description || '',
@@ -70,8 +88,31 @@ const RecipePage = () => {
             }
         };
 
+        const fetchRatings = async () => {
+            const ratingsRef = collection(db, `recipes/${id}/ratings`);
+            const ratingsSnapshot = await getDocs(ratingsRef);
+
+            const ratings = ratingsSnapshot.docs.map((doc) => doc.data().rating);
+            if (ratings.length > 0) {
+                const average = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+                setAverageRating(average);
+                setTotalRatings(ratings.length);
+            }
+        };
+
+        const fetchComments = () => {
+            const commentsRef = collection(db, `recipes/${id}/comments`);
+            const commentsQuery = query(commentsRef, orderBy('timestamp', 'desc'));
+
+            onSnapshot(commentsQuery, (snapshot) => {
+                setComments(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+            });
+        };
+
         fetchUser();
         fetchRecipe();
+        fetchRatings();
+        fetchComments();
     }, [id]);
 
     const handleFavorite = async () => {
@@ -110,6 +151,60 @@ const RecipePage = () => {
             navigate('/');
         } catch (error) {
             alert('Failed to delete recipe');
+        }
+    };
+
+    const handleAddComment = async () => {
+        const user = auth.currentUser;
+        if (!user) {
+            alert('Please log in to add a comment.');
+            return;
+        }
+
+        if (!newComment.trim()) {
+            alert('Comment cannot be empty.');
+            return;
+        }
+
+        try {
+            const commentsRef = collection(db, `recipes/${id}/comments`);
+            await addDoc(commentsRef, {
+                userId: user.uid,
+                userName: user.displayName || 'Anonymous',
+                content: newComment,
+                timestamp: new Date(),
+            });
+            setNewComment('');
+        } catch (error) {
+            alert('Failed to add comment. Please try again.');
+        }
+    };
+
+    const handleRate = async (newRating) => {
+        const user = auth.currentUser;
+        if (!user) {
+            alert('Please log in to rate this recipe.');
+            return;
+        }
+
+        try {
+            const ratingsRef = doc(db, `recipes/${id}/ratings`, user.uid);
+            await setDoc(ratingsRef, {
+                userId: user.uid,
+                rating: newRating,
+            });
+
+            // Recalculate average rating
+            const ratingsSnapshot = await getDocs(collection(db, `recipes/${id}/ratings`));
+            const ratings = ratingsSnapshot.docs.map((doc) => doc.data().rating);
+            const average = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+
+            setAverageRating(average);
+            setTotalRatings(ratings.length);
+
+            alert('Thanks for your rating!');
+        } catch (error) {
+            alert('Failed to submit rating. Please try again.');
         }
     };
 
@@ -167,6 +262,73 @@ const RecipePage = () => {
                             </ul>
                         ) : (
                             <p>No steps available</p>
+                        )}
+                    </Col>
+                </Row>
+                <Row className="mt-4">
+                    <Col>
+                        <h3>Rate this Recipe</h3>
+                        <ReactStars
+                            value={averageRating}
+                            count={5}
+                            size={30}
+                            activeColor="#ffd700"
+                            emptyIcon={<i className="far fa-star"></i>}
+                            filledIcon={<i className="fas fa-star"></i>}
+                            isHalf={true}
+                            edit={true}
+                            onChange={handleRate}
+                        />
+                        <p>Average Rating: {averageRating.toFixed(1)} ({totalRatings} ratings)</p>
+                    </Col>
+                </Row>
+                <Row className="mt-5">
+                    <Col>
+                        <h3>Comments</h3>
+                        {auth.currentUser ? (
+                            <>
+                                <Form>
+                                    <Form.Group controlId="newComment">
+                                        <Form.Label>Add a Comment</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Write your comment here..."
+                                            value={newComment}
+                                            onChange={(e) => setNewComment(e.target.value)}
+                                        />
+                                    </Form.Group>
+                                    <Button variant="primary" className="mt-3" onClick={handleAddComment}>
+                                        Submit
+                                    </Button>
+                                </Form>
+                            </>
+                        ) : (
+                            <p>
+                                You need to log in to post a comment.{' '}
+                                <Button
+                                    variant="link"
+                                    className="p-0"
+                                    onClick={() => navigate('/login')}
+                                >
+                                    Click here to log in.
+                                </Button>
+                            </p>
+                        )}
+
+                        {comments.length > 0 ? (
+                            <div className="mt-4">
+                                {comments.map((comment) => (
+                                    <div key={comment.id} className="mb-3">
+                                        <strong>{comment.userName}</strong>: {comment.content}
+                                        <br />
+                                        <small className="text-muted">
+                                            Posted on {new Date(comment.timestamp.seconds * 1000).toLocaleString()}
+                                        </small>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="mt-4">No comments yet. Be the first to comment!</p>
                         )}
                     </Col>
                 </Row>

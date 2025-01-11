@@ -52,7 +52,7 @@ const AppNavbar = ({ onSearch }) => {
                     height="30"
                     className="d-inline-block align-top me-2"
                 />
-                Recipe Website
+                Mounika's Kitchen
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="navbar" />
             <Navbar.Collapse id="navbar">
