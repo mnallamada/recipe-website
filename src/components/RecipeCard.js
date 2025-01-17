@@ -27,11 +27,12 @@ const RecipeCard = ({ recipe }) => {
 
     return (
         <Card className="m-3" style={{ width: '18rem' }}>
-            <Link to={`/recipe/${recipe.id}`}>
-                <Card.Img variant="top" src={recipe.image} alt={recipe.title} />
-            </Link>
+            
+            <Card.Img variant="top" src={recipe.imageUrl} alt={recipe.title} />
             <Card.Body>
-                <Card.Title>{recipe.title}</Card.Title>
+                <Link to={`/recipe/${recipe.id}`}>
+                    <Card.Title>{recipe.title}</Card.Title>
+                </Link>
                 <Card.Text>{recipe.description}</Card.Text>
                 <ReactStars
                     value={averageRating}

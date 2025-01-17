@@ -1,29 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { db } from '../firebase/config';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { db, storage } from '../firebase/config';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { Container, Form, Button, Row, Col } from 'react-bootstrap';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
 
 const EditRecipe = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const location = useLocation();
     const [recipe, setRecipe] = useState({
         title: '',
         description: '',
-        ingredients: [],
-        steps: [],
+        ingredients: '',
+        steps: '',
         videoUrl: '',
+        imageUrl: '',
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [imageFile, setImageFile] = useState(null);
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         const fetchRecipe = async () => {
             try {
                 const docRef = doc(db, 'recipes', id);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     setRecipe(docSnap.data());
                 } else {
@@ -36,13 +38,8 @@ const EditRecipe = () => {
             }
         };
 
-        if (location.state?.recipe) {
-            setRecipe(location.state.recipe);
-            setLoading(false);
-        } else {
-            fetchRecipe();
-        }
-    }, [id, location]);
+        fetchRecipe();
+    }, [id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -52,43 +49,49 @@ const EditRecipe = () => {
         }));
     };
 
-    const handleArrayChange = (index, value, field) => {
-        setRecipe((prev) => {
-            const updatedArray = [...prev[field]];
-            updatedArray[index] = value;
-            return { ...prev, [field]: updatedArray };
-        });
-    };
-
-    const addArrayItem = (field) => {
-        setRecipe((prev) => ({
-            ...prev,
-            [field]: [...prev[field], ''],
-        }));
-    };
-
-    const removeArrayItem = (index, field) => {
-        setRecipe((prev) => {
-            const updatedArray = [...prev[field]];
-            updatedArray.splice(index, 1);
-            return { ...prev, [field]: updatedArray };
-        });
+    const handleFileChange = (e) => {
+        setImageFile(e.target.files[0]);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            setUploading(true);
+            let uploadedImageUrl = recipe.imageUrl;
+
+            // Upload image if a new file is selected
+            if (imageFile) {
+                const storageRef = ref(storage, `recipes/${id}/${imageFile.name}`);
+                const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+                // Wait for upload completion and get download URL
+                await new Promise((resolve, reject) => {
+                    uploadTask.on(
+                        'state_changed',
+                        null,
+                        (error) => reject(error),
+                        () => resolve()
+                    );
+                });
+
+                uploadedImageUrl = await getDownloadURL(storageRef);
+            }
+
+            // Update Firestore document
             const docRef = doc(db, 'recipes', id);
-            await updateDoc(docRef, recipe);
+            await updateDoc(docRef, { ...recipe, imageUrl: uploadedImageUrl });
             alert('Recipe updated successfully!');
             navigate(`/recipe/${id}`);
         } catch (error) {
+            console.error('Error updating recipe:', error);
             alert('Failed to update recipe. Please try again.');
+        } finally {
+            setUploading(false);
         }
     };
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>{error}</p>;
+    if (loading) return <Spinner animation="border" />;
+    if (error) return <Alert variant="danger">{error}</Alert>;
 
     return (
         <Container className="mt-5">
@@ -119,62 +122,28 @@ const EditRecipe = () => {
 
                 <Form.Group className="mb-3">
                     <Form.Label>Ingredients</Form.Label>
-                    {recipe.ingredients.map((ingredient, index) => (
-                        <Row key={index} className="mb-2">
-                            <Col>
-                                <Form.Control
-                                    type="text"
-                                    value={ingredient}
-                                    onChange={(e) =>
-                                        handleArrayChange(index, e.target.value, 'ingredients')
-                                    }
-                                />
-                            </Col>
-                            <Col xs="auto">
-                                <Button
-                                    variant="danger"
-                                    onClick={() => removeArrayItem(index, 'ingredients')}
-                                >
-                                    Remove
-                                </Button>
-                            </Col>
-                        </Row>
-                    ))}
-                    <Button
-                        variant="primary"
-                        onClick={() => addArrayItem('ingredients')}
-                        className="mt-2"
-                    >
-                        Add Ingredient
-                    </Button>
+                    <Form.Control
+                        as="textarea"
+                        rows={5}
+                        name="ingredients"
+                        value={recipe.ingredients}
+                        onChange={handleChange}
+                        placeholder="Enter ingredients as HTML (e.g., <ul><li>Item 1</li><li>Item 2</li></ul>)"
+                        required
+                    />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
                     <Form.Label>Steps</Form.Label>
-                    {recipe.steps.map((step, index) => (
-                        <Row key={index} className="mb-2">
-                            <Col>
-                                <Form.Control
-                                    type="text"
-                                    value={step}
-                                    onChange={(e) =>
-                                        handleArrayChange(index, e.target.value, 'steps')
-                                    }
-                                />
-                            </Col>
-                            <Col xs="auto">
-                                <Button
-                                    variant="danger"
-                                    onClick={() => removeArrayItem(index, 'steps')}
-                                >
-                                    Remove
-                                </Button>
-                            </Col>
-                        </Row>
-                    ))}
-                    <Button variant="primary" onClick={() => addArrayItem('steps')} className="mt-2">
-                        Add Step
-                    </Button>
+                    <Form.Control
+                        as="textarea"
+                        rows={5}
+                        name="steps"
+                        value={recipe.steps}
+                        onChange={handleChange}
+                        placeholder="Enter steps as HTML (e.g., <ol><li>Step 1</li><li>Step 2</li></ol>)"
+                        required
+                    />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
@@ -187,10 +156,27 @@ const EditRecipe = () => {
                     />
                 </Form.Group>
 
-                <Button variant="success" type="submit">
-                    Save Changes
+                <Form.Group className="mb-3">
+                    <Form.Label>Image</Form.Label>
+                    <Form.Control type="file" onChange={handleFileChange} />
+                    {recipe.imageUrl && (
+                        <img
+                            src={recipe.imageUrl}
+                            alt="Recipe"
+                            className="mt-3"
+                            style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }}
+                        />
+                    )}
+                </Form.Group>
+
+                <Button variant="success" type="submit" disabled={uploading}>
+                    {uploading ? 'Uploading...' : 'Save Changes'}
                 </Button>
-                <Button variant="secondary" onClick={() => navigate(`/recipe/${id}`)} className="ms-2">
+                <Button
+                    variant="secondary"
+                    onClick={() => navigate(`/recipe/${id}`)}
+                    className="ms-2"
+                >
                     Cancel
                 </Button>
             </Form>

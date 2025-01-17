@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db, auth } from '../firebase/config';
+import Image from 'react-bootstrap/Image';
+
 import {
     doc,
     getDoc,
@@ -42,6 +44,7 @@ const RecipePage = () => {
         ingredients: [],
         steps: [],
         videoUrl: '',
+        imageUrl: '',
     });
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
@@ -79,6 +82,7 @@ const RecipePage = () => {
                         ingredients: data.ingredients || [],
                         steps: data.steps || [],
                         videoUrl: data.videoUrl || '',
+                        imageUrl: data.imageUrl || '',
                     });
                 } else {
                     setError('Recipe not found');
@@ -236,6 +240,9 @@ const RecipePage = () => {
                         <h2>{recipe.title}</h2>
                         <p>{recipe.description}</p>
                     </Col>
+                </Row>
+                <Row className="mt-4">
+                    <Col><Image src={recipe.imageUrl} fluid /></Col>
                 </Row>
                 <Row className="mt-4">
                     <Col>

@@ -2,14 +2,19 @@
   "hosting": {
     "public": "build",
     "ignore": [
-      "firebase.json",
-      "**/.*",
       "**/node_modules/**"
     ],
     "rewrites": [
       {
         "source": "**",
         "destination": "/index.html"
+      }
+    ],
+    "redirects": [
+      {
+        "source": "/mounikaskitchen",
+        "destination": "/",
+        "type": 301
       }
     ]
   }
